@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SmartCampus AI | SIH Prototype</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="Style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="overlay" id="overlay"></div>
+
+    <div class="app-layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">
+                <div class="brand-icon"><i class="fa-solid fa-leaf"></i></div>
+                <div>
+                    <h2>SmartCampus AI</h2>
+                    <span>SIH Prototype Platform</span>
+                </div>
+            </div>
+
+            <div class="nav-label">Command Center</div>
+            <button class="nav-item active" data-page="dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</button>
+            <button class="nav-item" data-page="classrooms"><i class="fa-solid fa-school"></i> Smart Classrooms</button>
+            <button class="nav-item" data-page="devices"><i class="fa-solid fa-microchip"></i> Devices</button>
+            <button class="nav-item" data-page="energy"><i class="fa-solid fa-bolt"></i> Energy</button>
+            <button class="nav-item" data-page="automation"><i class="fa-solid fa-wand-magic-sparkles"></i> Automation</button>
+
+            <div class="nav-label">Maintenance Intelligence</div>
+            <button class="nav-item" data-page="maintenance"><i class="fa-solid fa-screwdriver-wrench"></i> Maintenance</button>
+            <button class="nav-item" data-page="tickets"><i class="fa-solid fa-ticket"></i> Tickets</button>
+            <button class="nav-item" data-page="predictions"><i class="fa-solid fa-brain"></i> AI Predictions</button>
+            <button class="nav-item" data-page="analytics"><i class="fa-solid fa-chart-line"></i> Analytics</button>
+            <button class="nav-item" data-page="alerts"><i class="fa-solid fa-bell"></i> Alerts</button>
+
+            <div class="nav-label">Campus Operations</div>
+            <button class="nav-item" data-page="departments"><i class="fa-solid fa-building-user"></i> Departments</button>
+            <button class="nav-item" data-page="employees"><i class="fa-solid fa-users-gear"></i> Employees</button>
+            <button class="nav-item" data-page="workflow"><i class="fa-solid fa-diagram-project"></i> Workflow</button>
+            <button class="nav-item" data-page="hardware"><i class="fa-solid fa-server"></i> Hardware</button>
+            <button class="nav-item" data-page="settings"><i class="fa-solid fa-gear"></i> Settings</button>
+
+            <div class="sidebar-footer">
+                <span class="live-dot"></span> LIVE SYSTEM STATUS<br>
+                <strong style="color:white">24 IoT gateways connected</strong><br> Updated from simulated campus sensors
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></button>
+                    <div>
+                        <div class="page-title" id="topPageTitle">Campus Dashboard</div>
+                        <div class="breadcrumb">SmartCampus AI / <span id="breadcrumbName">Dashboard</span></div>
+                    </div>
+                </div>
+
+                <div class="topbar-right">
+                    <div class="demo-mode"><span class="live-dot"></span> DEMO MODE — SIMULATED IOT DATA</div>
+
+                    <div class="notification-wrap">
+                        <button class="icon-btn" id="notificationButton">
+              <i class="fa-regular fa-bell"></i>
+              <span class="notification-count" id="notificationCount">3</span>
+            </button>
+
+                        <div class="notification-panel" id="notificationPanel">
+                            <div class="notification-head">
+                                <h4>Live Notifications</h4>
+                                <button id="markAllRead">Mark all read</button>
+                            </div>
+                            <div id="notificationList"></div>
+                        </div>
+                    </div>
+
+                    <div class="profile">
+                        <div class="avatar">SIH</div>
+                        <div class="profile-info">
+                            <strong>Campus Admin</strong>
+                            <span>System Control</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- DASHBOARD -->
+            <section class="page active" id="dashboard">
+                <div class="hero">
+                    <div class="hero-content">
+                        <div class="hero-chip"><i class="fa-solid fa-circle-check"></i> AI-POWERED CAMPUS OPERATIONS</div>
+                        <h1>Smart Campus.<br>Smarter Energy.<br>Automatic Maintenance.</h1>
+                        <p>
+                            An AI-powered campus automation platform that detects problems, optimizes energy usage and automatically connects every issue to the right maintenance employee.
+                        </p>
+                        <div class="hero-actions">
+                            <button class="btn btn-primary" onclick="navigateTo('energy')">
+                <i class="fa-solid fa-chart-line"></i> View Live Dashboard
+              </button>
+                            <button class="btn btn-outline" onclick="navigateTo('workflow')">
+                <i class="fa-solid fa-diagram-project"></i> How It Works
+              </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid" id="dashboardStats"></div>
+
+                <div class="grid-2">
+                    <div class="card chart-card">
+                        <div class="card-head">
+                            <div>
+                                <h3>Campus Energy Consumption</h3>
+                                <p>Real-time energy use and optimization performance</p>
+                            </div>
+                            <div class="range-tabs">
+                                <button class="range-tab active" onclick="changeChartRange('today', this)">Today</button>
+                                <button class="range-tab" onclick="changeChartRange('week', this)">Week</button>
+                                <button class="range-tab" onclick="changeChartRange('month', this)">Month</button>
+                            </div>
+                        </div>
+                        <canvas id="energyChart"></canvas>
+                    </div>
+
+                    <div class="card chart-card">
+                        <div class="card-head">
+                            <div>
+                                <h3>Device Health Overview</h3>
+                                <p>Current health distribution across monitored assets</p>
+                            </div>
+                            <span class="badge badge-success">1,248 ACTIVE DEVICES</span>
+                        </div>
+                        <canvas id="healthChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="grid-2" style="margin-top:20px">
+                    <div class="card activity-card">
+                        <div class="card-head">
+                            <div>
+                                <h3>Live Automation Activity</h3>
+                                <p>Decisions made automatically by the rule and AI engine</p>
+                            </div>
+                            <button class="btn btn-outline btn-small" onclick="navigateTo('automation')">View all</button>
+                        </div>
+                        <div id="dashboardActivity"></div>
+                    </div>
+
+                    <div class="card quick-card">
+                        <div class="card-head">
+                            <div>
+                                <h3>SIH Demo Controls</h3>
+                                <p>Show automatic detection, assignment and energy saving.</p>
+                            </div>
+                            <span class="badge badge-purple">PROTOTYPE</span>
+                        </div>
+
+                        <div class="quick-demo">
+                            <h4><i class="fa-solid fa-triangle-exclamation" style="color:var(--red)"></i> Automated Fault Demonstration</h4>
+                            <p>Simulate a projector fault. The platform detects it, calculates priority, selects IT/AV, assigns an employee and generates a ticket.</p>
+                            <button class="btn btn-danger btn-small" onclick="simulateFault('Projector P-A204')">
+                <i class="fa-solid fa-bolt"></i> Simulate Projector Fault
+              </button>
+                        </div>
+
+                        <div class="quick-demo">
+                            <h4><i class="fa-solid fa-leaf" style="color:var(--green-dark)"></i> Energy Automation Demonstration</h4>
+                            <p>Simulate an empty classroom and automatically switch suitable loads off to save energy.</p>
+                            <button class="btn btn-primary btn-small" onclick="simulateEmptyClassroom()">
+                <i class="fa-solid fa-power-off"></i> Simulate Empty Classroom
+              </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CLASSROOMS -->
+            <section class="page" id="classrooms">
+                <div class="section-heading">
+                    <div>
+                        <h2>Smart Classroom Monitoring</h2>
+                        <p>Live occupancy, environmental conditions, appliance states and energy consumption for connected rooms.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="simulateEmptyClassroom()"><i class="fa-solid fa-wand-magic-sparkles"></i> Simulate Empty Room</button>
+                </div>
+                <div class="grid-4" id="roomsGrid"></div>
+            </section>
+
+            <!-- DEVICES -->
+            <section class="page" id="devices">
+                <div class="section-heading">
+                    <div>
+                        <h2>Smart Device Monitoring</h2>
+                        <p>Monitor campus devices, their location, health, power use, responsible department and fault condition.</p>
+                    </div>
+                    <button class="btn btn-danger" onclick="simulateFault('Projector P-A204')"><i class="fa-solid fa-triangle-exclamation"></i> Simulate Device Fault</button>
+                </div>
+
+                <div class="card table-card">
+                    <div class="table-tools">
+                        <h3>Connected Device Inventory</h3>
+                        <div class="search-filter">
+                            <input class="search-input" id="deviceSearch" placeholder="Search device, room, department..." oninput="renderDevices()">
+                            <select class="filter-select" id="deviceTypeFilter" onchange="renderDevices()">
+                <option value="">All Device Types</option>
+                <option>Projector</option>
+                <option>AC Unit</option>
+                <option>Network Device</option>
+                <option>Lab Equipment</option>
+                <option>Light</option>
+              </select>
+                            <select class="filter-select" id="deviceStatusFilter" onchange="renderDevices()">
+                <option value="">All Statuses</option>
+                <option>Operational</option>
+                <option>Warning</option>
+                <option>Fault</option>
+                <option>Offline</option>
+              </select>
+                        </div>
+                    </div>
+                    <div class="table-scroll">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Device</th>
+                                    <th>Location</th>
+                                    <th>Department</th>
+                                    <th>Power</th>
+                                    <th>Health</th>
+                                    <th>Status</th>
+                                    <th>Last Checked</th>
+                                </tr>
+                            </thead>
+                            <tbody id="devicesTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ENERGY -->
+            <section class="page" id="energy">
+                <div class="section-heading">
+                    <div>
+                        <h2>Energy Intelligence Center</h2>
+                        <p>Track energy consumption, savings, peak-demand patterns and AI optimization recommendations.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="simulateEmptyClassroom()"><i class="fa-solid fa-leaf"></i> Run Energy Automation Demo</button>
+                </div>
+
+                <div class="stats-grid" id="energyStats"></div>
+
+                <div class="grid-2">
+                    <div class="card chart-card">
+                        <div class="card-head">
+                            <div>
+                                <h3>Hourly Energy Consumption</h3>
+                                <p>Actual consumption compared with optimized target</p>
+                            </div>
+                            <span class="badge badge-success">14.8% OPTIMIZATION</span>
+                        </div>
+                        <canvas id="energyDetailChart"></canvas>
+                    </div>
+
+                    <div class="card chart-card">
+                        <div class="card-head">
+                            <div>
+                                <h3>Weekly Energy Saved</h3>
+                                <p>Energy saved through automatic appliance control</p>
+                            </div>
+                        </div>
+                        <canvas id="savingChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="energy-prediction card" style="margin-top:20px">
+                    <h2><i class="fa-solid fa-brain"></i> AI-Based Energy Prediction</h2>
+                    <p>Prediction generated using historical consumption, occupancy, temperature, timetable and environmental patterns.</p>
+                    <div class="prediction-numbers">
+                        <div><strong>1,240 kWh</strong><span>Today's Consumption</span></div>
+                        <div><strong>1,310 kWh</strong><span>Tomorrow Predicted</span></div>
+                        <div><strong>91%</strong><span>Prediction Confidence</span></div>
+                        <div><strong>2:00 PM</strong><span>Expected Peak Demand</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AUTOMATION -->
+            <section class="page" id="automation">
+                <div class="section-heading">
+                    <div>
+                        <h2>Automation Control Center</h2>
+                        <p>Rule-based and AI-assisted decisions automatically reduce wastage without depending on manual action.</p>
+                    </div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap">
+                        <button class="btn btn-outline" onclick="simulateFault('AC B-201')"><i class="fa-solid fa-snowflake"></i> Simulate AC Fault</button>
+                        <button class="btn btn-primary" onclick="simulateEmptyClassroom()"><i class="fa-solid fa-power-off"></i> Empty Room Demo</button>
+                    </div>
+                </div>
+
+                <div class="automation-summary">
+                    <h2>Automation Engine Is Active</h2>
+                    <p>System rules currently monitor occupancy, room temperature, ambient light, humidity and energy consumption. Suitable connected loads are controlled automatically in this prototype simulation.</p>
+                    <div class="automation-total">
+                        <div><strong id="automationSaved">42.8 kWh</strong><span>Energy saved today</span></div>
+                        <div><strong>18</strong><span>Automated actions executed</span></div>
+                        <div><strong>96.4%</strong><span>Decision engine accuracy</span></div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card timeline-card">
+                        <div class="card-head">
+                            <div>
+                                <h3>Recent Automated Actions</h3>
+                                <p>Events generated by automation engine</p>
+                            </div>
+                        </div>
+                        <div id="automationTimeline"></div>
+                    </div>
+
+                    <div class="card quick-card">
+                        <div class="card-head">
+                            <div>
+                                <h3>Prototype Simulation Controls</h3>
+                                <p>These controls are for SIH presentation demonstration only.</p>
+                            </div>
+                            <span class="badge badge-info">SIMULATION</span>
+                        </div>
+
+                        <div class="quick-demo">
+                            <h4>Occupancy-Based Control</h4>
+                            <p>When occupancy remains zero for more than five minutes, lights and fans are switched off, while AC is optimized or switched off.</p>
+                            <button class="btn btn-primary btn-small" onclick="simulateEmptyClassroom()">Test Empty Classroom Rule</button>
+                        </div>
+
+                        <div class="quick-demo">
+                            <h4>Temperature Optimization</h4>
+                            <p>AI recommendation: change A-103 cooling setpoint from 24°C to 26°C to maintain comfort while reducing electricity usage.</p>
+                            <button class="btn btn-outline btn-small" onclick="optimizeTemperature()">Apply Optimization</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MAINTENANCE -->
+            <section class="page" id="maintenance">
+                <div class="section-heading">
+                    <div>
+                        <h2>Automated Maintenance Center</h2>
+                        <p>Faults are detected automatically, prioritized, mapped to departments and assigned to the best available technician.</p>
+                    </div>
+                    <button class="btn btn-danger" onclick="simulateFault('Projector P-A204')"><i class="fa-solid fa-bolt"></i> Run Fault Workflow Demo</button>
+                </div>
+
+                <div class="workflow-intro card">
+                    <h2>Not Complaint Management — Intelligent Maintenance Automation</h2>
+                    <p>
+                        Device → real-time monitoring → abnormal condition detected → fault identified → device location identified → responsible department selected → priority calculated → available employee selected → maintenance ticket created → employee notified → repair
+                        → resolution data stored for predictive maintenance.
+                    </p>
+                </div>
+
+                <div class="grid-3" id="maintenanceSummary"></div>
+
+                <div class="card table-card" style="margin-top:20px">
+                    <div class="table-tools">
+                        <h3>Automatic Assignment Explanation</h3>
+                        <span class="badge badge-success">RULE ENGINE ACTIVE</span>
+                    </div>
+                    <div style="padding:20px" id="assignmentExplanation">
+                        <div class="quick-demo" style="margin:0">
+                            <h4>Latest Automatic Assignment: Projector P-A204</h4>
+                            <p><strong>Department:</strong> IT / AV Maintenance &nbsp; | &nbsp; <strong>Priority:</strong> HIGH</p>
+                            <p style="margin-top:8px">Assigned to <strong>Rahul Patel</strong> because: ✓ IT/AV technician ✓ Projector maintenance skill ✓ Available ✓ Lowest current workload in matching department.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TICKETS -->
+            <section class="page" id="tickets">
+                <div class="section-heading">
+                    <div>
+                        <h2>Maintenance Tickets</h2>
+                        <p>Tickets are generated automatically after the monitoring system confirms an abnormal device condition.</p>
+                    </div>
+                    <button class="btn btn-danger" onclick="simulateFault('Projector P-A204')"><i class="fa-solid fa-plus"></i> Generate Fault Ticket</button>
+                </div>
+
+                <div class="card table-card">
+                    <div class="table-tools">
+                        <h3>Live Ticket Queue</h3>
+                        <div class="search-filter">
+                            <input class="search-input" id="ticketSearch" placeholder="Search ticket, device, employee..." oninput="renderTickets()">
+                            <select class="filter-select" id="priorityFilter" onchange="renderTickets()">
+                <option value="">All Priorities</option>
+                <option>Critical</option>
+                <option>High</option>
+                <option>Medium</option>
+                <option>Low</option>
+              </select>
+                            <select class="filter-select" id="ticketStatusFilter" onchange="renderTickets()">
+                <option value="">All Statuses</option>
+                <option>Detected</option>
+                <option>Assigned</option>
+                <option>In Progress</option>
+                <option>Resolved</option>
+              </select>
+                        </div>
+                    </div>
+                    <div class="table-scroll">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Ticket</th>
+                                    <th>Device / Fault</th>
+                                    <th>Location</th>
+                                    <th>Priority</th>
+                                    <th>Department</th>
+                                    <th>Assigned Employee</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ticketsTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI PREDICTIONS -->
+            <section class="page" id="predictions">
+                <div class="section-heading">
+                    <div>
+                        <h2>AI Predictive Maintenance</h2>
+                        <p>Frontend simulation of ML-based failure probability, expected failure window, risk factors and preventive recommendations.</p>
+                    </div>
+                    <span class="badge badge-purple"><i class="fa-solid fa-brain"></i>&nbsp; AI / ML SIMULATION</span>
+                </div>
+
+                <div class="grid-3" id="predictionCards"></div>
+
+                <div class="card workflow-area" style="margin-top:20px">
+                    <h3>AI Energy Prediction Pipeline</h3>
+                    <div class="flow-row">
+                        <div class="flow-node"><i class="fa-solid fa-clock"></i><strong>Historical Data</strong></div>
+                        <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                        <div class="flow-node"><i class="fa-solid fa-users"></i><strong>Occupancy</strong></div>
+                        <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                        <div class="flow-node"><i class="fa-solid fa-temperature-half"></i><strong>Temperature & Weather</strong></div>
+                        <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                        <div class="flow-node"><i class="fa-solid fa-brain"></i><strong>AI / ML Model</strong></div>
+                        <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                        <div class="flow-node"><i class="fa-solid fa-chart-line"></i><strong>Energy Prediction</strong></div>
+                        <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                        <div class="flow-node"><i class="fa-solid fa-wand-magic-sparkles"></i><strong>Optimization Recommendation</strong></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ANALYTICS -->
+            <section class="page" id="analytics">
+                <div class="section-heading">
+                    <div>
+                        <h2>Campus Analytics & Reporting</h2>
+                        <p>Executive-level insights for energy, devices, maintenance performance, workload and department efficiency.</p>
+                    </div>
+                    <button class="btn btn-outline" onclick="showToast('Report Prepared', 'Campus performance report generated for prototype presentation.', 'success')"><i class="fa-solid fa-file-arrow-down"></i> Export Report</button>
+                </div>
+
+                <div class="stats-grid" id="analyticsStats"></div>
+
+                <div class="grid-2">
+                    <div class="card chart-card">
+                        <div class="card-head">
+                            <div>
+                                <h3>Maintenance Resolution Performance</h3>
+                                <p>Average ticket resolution time by department</p>
+                            </div>
+                        </div>
+                        <canvas id="maintenanceChart"></canvas>
+                    </div>
+
+                    <div class="card chart-card">
+                        <div class="card-head">
+                            <div>
+                                <h3>Department Ticket Distribution</h3>
+                                <p>Open and resolved maintenance workload</p>
+                            </div>
+                        </div>
+                        <canvas id="departmentChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ALERTS -->
+            <section class="page" id="alerts">
+                <div class="section-heading">
+                    <div>
+                        <h2>Alerts Center</h2>
+                        <p>Critical device faults, abnormal energy patterns, assignment notifications and energy-saving updates.</p>
+                    </div>
+                    <button class="btn btn-outline" onclick="markAllAlertsRead()">Mark All Read</button>
+                </div>
+                <div class="card" style="padding:4px 20px" id="alertsList"></div>
+            </section>
+
+            <!-- DEPARTMENTS -->
+            <section class="page" id="departments">
+                <div class="section-heading">
+                    <div>
+                        <h2>Department Performance</h2>
+                        <p>Monitor ticket volume, available workforce, resolution performance and critical issue load by department.</p>
+                    </div>
+                </div>
+                <div class="grid-3" id="departmentsGrid"></div>
+            </section>
+
+            <!-- EMPLOYEES -->
+            <section class="page" id="employees">
+                <div class="section-heading">
+                    <div>
+                        <h2>Technician & Employee Dashboard</h2>
+                        <p>Employees are chosen automatically using department, skills, availability and active workload.</p>
+                    </div>
+                    <input class="search-input" id="employeeSearch" placeholder="Search employee, skill, department..." oninput="renderEmployees()">
+                </div>
+                <div class="grid-3" id="employeesGrid"></div>
+            </section>
+
+            <!-- WORKFLOW -->
+            <section class="page" id="workflow">
+                <div class="section-heading">
+                    <div>
+                        <h2>How SmartCampus AI Works</h2>
+                        <p>A complete workflow connecting IoT devices, intelligent decision making, energy automation and predictive maintenance.</p>
+                    </div>
+                </div>
+
+                <div class="workflow-intro card">
+                    <h2>Problem Statement</h2>
+                    <p>
+                        Educational campuses consume significant amounts of electricity through classrooms, laboratories, offices and other facilities. Energy is often wasted when appliances remain active in unoccupied spaces. At the same time, equipment failures are frequently
+                        handled through manual complaints, causing delays in identifying, assigning and resolving maintenance issues. The proposed Smart Campus Automation System addresses both problems through real-time IoT monitoring, intelligent energy
+                        automation, automatic fault detection, predictive maintenance, and automated employee assignment.
+                    </p>
+                </div>
+
+                <div class="workflow-intro card">
+                    <h2>Solution Statement</h2>
+                    <p>
+                        The system continuously monitors campus environments and devices using IoT sensors and software-based monitoring. When abnormal conditions are detected, it automatically identifies the affected device and location, determines the responsible department,
+                        prioritizes the issue and assigns an available employee. For energy management, the system analyzes occupancy, environmental conditions and consumption patterns to automatically control suitable electrical loads and reduce energy
+                        wastage. Historical data is further used for AI-based energy prediction and predictive maintenance.
+                    </p>
+                </div>
+
+                <div class="card workflow-area">
+                    <h3>Energy Automation Workflow</h3>
+                    <div class="flow-row">
+                        <div class="flow-node"><i class="fa-solid fa-satellite-dish"></i><strong>Sensors</strong></div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-node"><i class="fa-solid fa-microchip"></i><strong>ESP32</strong></div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-node"><i class="fa-solid fa-wifi"></i><strong>Wi-Fi</strong></div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-node"><i class="fa-brands fa-python"></i><strong>Python Flask Backend</strong></div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-node"><i class="fa-solid fa-database"></i><strong>MySQL Database</strong></div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-node"><i class="fa-solid fa-brain"></i><strong>Fault Detection / AI Engine</strong></div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-node"><i class="fa-solid fa-wand-magic-sparkles"></i><strong>Decision Engine</strong></div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-node"><i class="fa-solid fa-power-off"></i><strong>Light / Fan / AC Control</strong></div>
+                    </div>
+                </div>
+
+                <div class="card workflow-area" style="margin-top:20px">
+                    <h3>Automatic Maintenance Workflow</h3>
+                    <div class="flow-row">
+                        <div class="flow-node"><i class="fa-solid fa-server"></i><strong>Device</strong></div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-node"><i class="fa-solid fa-triangle-exclamation"></i><strong>Fault Detected</strong></div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-node"><i class="fa-solid fa-location-dot"></i><strong>Location Identified</strong></div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-node"><i class="fa-solid fa-building-user"></i><strong>Department Identified</strong></div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-node"><i class="fa-solid fa-ranking-star"></i><strong>Priority Calculated</strong></div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-node"><i class="fa-solid fa-user-check"></i><strong>Employee Selected</strong></div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-node"><i class="fa-solid fa-ticket"></i><strong>Ticket Created</strong></div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-node"><i class="fa-solid fa-bell"></i><strong>Notification</strong></div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-node"><i class="fa-solid fa-screwdriver-wrench"></i><strong>Repair & Resolution</strong></div>
+                    </div>
+                </div>
+
+                <div class="grid-3" style="margin-top:20px">
+                    <div class="hardware-card card">
+                        <div class="hardware-icon"><i class="fa-solid fa-bolt"></i></div>
+                        <h3>Energy Saving</h3>
+                        <p>Reduced electricity wastage through occupancy-aware appliance control and intelligent energy optimization.</p>
+                    </div>
+                    <div class="hardware-card card">
+                        <div class="hardware-icon"><i class="fa-solid fa-stopwatch"></i></div>
+                        <h3>Faster Maintenance</h3>
+                        <p>Problems are automatically detected, classified, routed and assigned without waiting for manual complaints.</p>
+                    </div>
+                    <div class="hardware-card card">
+                        <div class="hardware-icon"><i class="fa-solid fa-chart-line"></i></div>
+                        <h3>Predictive Operations</h3>
+                        <p>Historical patterns help predict device failures and energy demand before they become serious issues.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- HARDWARE -->
+            <section class="page" id="hardware">
+                <div class="section-heading">
+                    <div>
+                        <h2>IoT Hardware Architecture</h2>
+                        <p>Suggested components for a safe SIH prototype demonstration using low-voltage sensors and suitable demonstration loads.</p>
+                    </div>
+                    <span class="badge badge-warning"><i class="fa-solid fa-shield-halved"></i>&nbsp; SAFE PROTOTYPE DESIGN</span>
+                </div>
+
+                <div class="grid-3">
+                    <div class="hardware-card card">
+                        <div class="hardware-icon"><i class="fa-solid fa-microchip"></i></div>
+                        <h3>ESP32</h3>
+                        <p>Main IoT controller. Reads sensors, communicates through Wi-Fi and sends monitoring data to the backend API.</p>
+                    </div>
+                    <div class="hardware-card card">
+                        <div class="hardware-icon"><i class="fa-solid fa-person-walking"></i></div>
+                        <h3>PIR Sensor</h3>
+                        <p>Detects occupancy or motion in classrooms, labs and other monitored campus spaces.</p>
+                    </div>
+                    <div class="hardware-card card">
+                        <div class="hardware-icon"><i class="fa-solid fa-temperature-half"></i></div>
+                        <h3>DHT22 Sensor</h3>
+                        <p>Measures room temperature and humidity for comfort monitoring and cooling optimization.</p>
+                    </div>
+                    <div class="hardware-card card">
+                        <div class="hardware-icon"><i class="fa-solid fa-sun"></i></div>
+                        <h3>LDR Sensor</h3>
+                        <p>Measures ambient light intensity to support automatic lighting decisions.</p>
+                    </div>
+                    <div class="hardware-card card">
+                        <div class="hardware-icon"><i class="fa-solid fa-gauge-high"></i></div>
+                        <h3>Energy Sensor</h3>
+                        <p>Provides energy and power usage information for equipment monitoring, analytics and anomaly detection.</p>
+                    </div>
+                    <div class="hardware-card card">
+                        <div class="hardware-icon"><i class="fa-solid fa-toggle-on"></i></div>
+                        <h3>Relay / Control Module</h3>
+                        <p>Controls suitable low-voltage demonstration loads to visually represent automation commands.</p>
+                    </div>
+                </div>
+
+                <div class="safe-note">
+                    <strong><i class="fa-solid fa-triangle-exclamation"></i> Safety note:</strong> This project interface is a software and presentation prototype. Do not use unsafe direct mains wiring. For SIH hardware demonstration, use proper isolation,
+                    qualified supervision and safe low-voltage or certified demonstration loads.
+                </div>
+
+                <div class="card workflow-area" style="margin-top:20px">
+                    <h3>Technology Stack</h3>
+                    <div class="grid-4">
+                        <div class="quick-demo">
+                            <h4>Frontend</h4>
+                            <p>HTML5, CSS3, Vanilla JavaScript, Chart.js</p>
+                        </div>
+                        <div class="quick-demo">
+                            <h4>Backend</h4>
+                            <p>Python, Flask, REST API</p>
+                        </div>
+                        <div class="quick-demo">
+                            <h4>Database</h4>
+                            <p>MySQL for devices, sensors, tickets and historical records</p>
+                        </div>
+                        <div class="quick-demo">
+                            <h4>AI / ML</h4>
+                            <p>Python, Pandas, NumPy, Scikit-learn</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SETTINGS -->
+            <section class="page" id="settings">
+                <div class="section-heading">
+                    <div>
+                        <h2>System Settings</h2>
+                        <p>Prototype configuration for automation policies, alerts and AI monitoring thresholds.</p>
+                    </div>
+                </div>
+
+                <div class="card" style="padding:0 22px">
+                    <div class="setting-row">
+                        <div>
+                            <h4>Occupancy-Based Energy Automation</h4>
+                            <p>Turn suitable room loads off or optimize them after five minutes of zero occupancy.</p>
+                        </div>
+                        <div class="switch active" onclick="this.classList.toggle('active')"></div>
+                    </div>
+                    <div class="setting-row">
+                        <div>
+                            <h4>Automatic Fault Ticket Creation</h4>
+                            <p>Create a maintenance ticket automatically after a confirmed device anomaly.</p>
+                        </div>
+                        <div class="switch active" onclick="this.classList.toggle('active')"></div>
+                    </div>
+                    <div class="setting-row">
+                        <div>
+                            <h4>Automatic Technician Assignment</h4>
+                            <p>Assign the most suitable available employee based on department, skill and workload.</p>
+                        </div>
+                        <div class="switch active" onclick="this.classList.toggle('active')"></div>
+                    </div>
+                    <div class="setting-row">
+                        <div>
+                            <h4>Predictive Maintenance Alerts</h4>
+                            <p>Notify maintenance teams when failure risk crosses the configured threshold.</p>
+                        </div>
+                        <div class="switch active" onclick="this.classList.toggle('active')"></div>
+                    </div>
+                    <div class="setting-row">
+                        <div>
+                            <h4>Peak Demand Energy Notifications</h4>
+                            <p>Alert campus administration when predicted demand is expected to exceed target levels.</p>
+                        </div>
+                        <div class="switch active" onclick="this.classList.toggle('active')"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="Script.js">
+    </script>
+</body>
+
+</html>
