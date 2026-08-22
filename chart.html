@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 
@@ -386,4 +387,394 @@
 
 </body>
 
+=======
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Campus Energy Charts</title>
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #172033;
+            padding: 25px;
+        }
+        
+        h1 {
+            color: #101827;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            color: #718096;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+        
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+        
+        .chart-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 20px;
+            height: 390px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(16, 24, 39, 0.08);
+        }
+        
+        .chart-card h2 {
+            font-size: 16px;
+            margin-bottom: 6px;
+        }
+        
+        .chart-card p {
+            color: #718096;
+            font-size: 12px;
+            margin-bottom: 15px;
+        }
+        /*
+      Important:
+      Chart.js must have a parent container
+      with a fixed height.
+    */
+        
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            height: 290px;
+        }
+        
+        .chart-wrapper canvas {
+            display: block !important;
+            width: 100% !important;
+            height: 100% !important;
+        }
+        
+        @media (max-width: 800px) {
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 500px) {
+            body {
+                padding: 15px;
+            }
+            .chart-card {
+                height: 340px;
+                padding: 15px;
+            }
+            .chart-wrapper {
+                height: 240px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Smart Campus Energy Analytics</h1>
+    <p class="subtitle">DEMO MODE — Simulated IoT Data</p>
+
+    <div class="chart-grid">
+
+        <!-- Energy Chart -->
+        <div class="chart-card">
+            <h2>Hourly Energy Consumption</h2>
+            <p>Actual usage compared with optimized target.</p>
+
+            <div class="chart-wrapper">
+                <canvas id="energyChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Health Chart -->
+        <div class="chart-card">
+            <h2>Device Health Overview</h2>
+            <p>Health distribution of connected campus devices.</p>
+
+            <div class="chart-wrapper">
+                <canvas id="healthChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Saving Chart -->
+        <div class="chart-card">
+            <h2>Weekly Energy Saved</h2>
+            <p>Energy saved through automatic appliance control.</p>
+
+            <div class="chart-wrapper">
+                <canvas id="savingChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Maintenance Chart -->
+        <div class="chart-card">
+            <h2>Maintenance Performance</h2>
+            <p>Average resolution time by department.</p>
+
+            <div class="chart-wrapper">
+                <canvas id="maintenanceChart"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const commonChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            resizeDelay: 200,
+
+            plugins: {
+                legend: {
+                    labels: {
+                        usePointStyle: true,
+                        boxWidth: 8,
+                        font: {
+                            size: 11
+                        }
+                    }
+                },
+
+                tooltip: {
+                    backgroundColor: "#101827",
+                    titleColor: "#ffffff",
+                    bodyColor: "#dbeafe",
+                    padding: 12
+                }
+            },
+
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    },
+
+                    ticks: {
+                        color: "#718096",
+                        font: {
+                            size: 10
+                        }
+                    }
+                },
+
+                y: {
+                    beginAtZero: true,
+
+                    grid: {
+                        color: "#edf1f5"
+                    },
+
+                    ticks: {
+                        color: "#718096",
+                        font: {
+                            size: 10
+                        }
+                    }
+                }
+            }
+        };
+
+        const energyChart = new Chart(
+            document.getElementById("energyChart"), {
+                type: "line",
+
+                data: {
+                    labels: [
+                        "8 AM",
+                        "9 AM",
+                        "10 AM",
+                        "11 AM",
+                        "12 PM",
+                        "1 PM",
+                        "2 PM",
+                        "3 PM",
+                        "4 PM",
+                        "5 PM"
+                    ],
+
+                    datasets: [{
+                        label: "Energy Consumption (kWh)",
+                        data: [19, 26, 31, 35, 38, 42, 49, 45, 37, 29],
+                        borderColor: "#27c66d",
+                        backgroundColor: "rgba(39, 198, 109, 0.14)",
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 3,
+                        pointRadius: 3,
+                        pointHoverRadius: 6
+                    }, {
+                        label: "Optimized Target",
+                        data: [17, 22, 27, 30, 32, 36, 40, 38, 32, 25],
+                        borderColor: "#3b82f6",
+                        backgroundColor: "transparent",
+                        borderDash: [6, 6],
+                        tension: 0.4,
+                        borderWidth: 2,
+                        pointRadius: 0
+                    }]
+                },
+
+                options: commonChartOptions
+            }
+        );
+
+        const healthChart = new Chart(
+            document.getElementById("healthChart"), {
+                type: "doughnut",
+
+                data: {
+                    labels: [
+                        "Healthy",
+                        "Warning",
+                        "Fault",
+                        "Offline"
+                    ],
+
+                    datasets: [{
+                        data: [1124, 84, 26, 14],
+
+                        backgroundColor: [
+                            "#27c66d",
+                            "#f59e0b",
+                            "#ef4444",
+                            "#94a3b8"
+                        ],
+
+                        borderWidth: 0,
+                        hoverOffset: 8
+                    }]
+                },
+
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    resizeDelay: 200,
+                    cutout: "68%",
+
+                    plugins: {
+                        legend: {
+                            position: "bottom",
+
+                            labels: {
+                                usePointStyle: true,
+                                boxWidth: 8,
+                                padding: 16,
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+
+                        tooltip: {
+                            backgroundColor: "#101827",
+                            padding: 12
+                        }
+                    }
+                }
+            }
+        );
+
+        const savingChart = new Chart(
+            document.getElementById("savingChart"), {
+                type: "line",
+
+                data: {
+                    labels: [
+                        "Monday",
+                        "Tuesday",
+                        "Wednesday",
+                        "Thursday",
+                        "Friday",
+                        "Saturday",
+                        "Sunday"
+                    ],
+
+                    datasets: [{
+                        label: "Energy Saved (kWh)",
+                        data: [28, 34, 31, 39, 42.8, 35, 29],
+                        borderColor: "#8b5cf6",
+                        backgroundColor: "rgba(139, 92, 246, 0.14)",
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 3,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+
+                options: commonChartOptions
+            }
+        );
+
+        const maintenanceChart = new Chart(
+            document.getElementById("maintenanceChart"), {
+                type: "bar",
+
+                data: {
+                    labels: [
+                        "IT / AV",
+                        "Electrical",
+                        "HVAC",
+                        "Network",
+                        "Lab Equipment"
+                    ],
+
+                    datasets: [{
+                        label: "Average Resolution Time (Minutes)",
+                        data: [34, 29, 41, 38, 46],
+
+                        backgroundColor: [
+                            "#3b82f6",
+                            "#ef4444",
+                            "#06b6d4",
+                            "#8b5cf6",
+                            "#f59e0b"
+                        ],
+
+                        borderRadius: 8,
+                        borderSkipped: false
+                    }]
+                },
+
+                options: commonChartOptions
+            }
+        );
+
+        /* Simulated real-time energy update */
+        setInterval(() => {
+            const energyData = energyChart.data.datasets[0].data;
+            const lastIndex = energyData.length - 1;
+
+            energyData[lastIndex] = Math.max(
+                15,
+                Math.round(energyData[lastIndex] + (Math.random() * 4 - 2))
+            );
+
+            energyChart.update("none");
+        }, 5000);
+    </script>
+
+</body>
+
+>>>>>>> d6ed9a59690a1d84c12af5a22265b010574d2a22
 </html>
