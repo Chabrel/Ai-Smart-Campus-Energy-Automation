@@ -512,3 +512,9 @@ const predictions = [{
         action: "Clean cooling system and inspect thermal performance."
     }
 ];
+let energyChart = null;
+let healthChart = null;
+let energyDetailChart = null;
+let savingChart = null;
+let maintenanceChart = null;
+let departmentChart = null;
