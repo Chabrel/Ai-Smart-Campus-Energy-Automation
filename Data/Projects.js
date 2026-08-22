@@ -1,3 +1,5 @@
+"use strict";
+
 const state = {
     energy: 284.6,
     saved: 42.8,
