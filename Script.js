@@ -312,6 +312,10 @@ const devices = [{
 // BACKEND / MYSQL API
 // =========================================================
 
+// =========================================================
+// BACKEND / MYSQL API
+// =========================================================
+
 const API_BASE_URL = "http://127.0.0.1:5000/api";
 
 async function apiGet(endpoint) {
@@ -331,8 +335,7 @@ async function loadEnergySummaryFromBackend() {
     try {
         const data = await apiGet("/energy/summary");
 
-        if (
-            !data ||
+        if (!data ||
             data.status !== "success" ||
             !data.summary
         ) {
@@ -454,7 +457,7 @@ async function loadDevicesFromBackend() {
                 floor: device.floor,
                 room: device.room,
                 department: department,
-                power: device.power ?? "0 kW",
+                power: device.power ? ? "0 kW",
                 health: health,
                 risk: risk,
                 status: frontendStatus,
@@ -582,7 +585,6 @@ async function loadRoomsFromBackend() {
     }
 }
 const employees = [{
-  
         id: "EMP-104",
         name: "Rahul Patel",
         department: "IT / AV",

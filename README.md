@@ -144,15 +144,15 @@ AI Energy Prediction
 
 ## Technology Stack
 
-| Layer | Technologies |
-|---|---|
-| Frontend | HTML5, CSS3, Vanilla JavaScript |
-| Charts | Chart.js |
-| Icons | Font Awesome |
-| Backend (Future Integration) | Python, Flask, REST API |
-| Database (Future Integration) | MySQL |
-| AI/ML (Future Integration) | Python, Pandas, NumPy, Scikit-learn |
-| IoT Hardware | ESP32, PIR, DHT22, LDR, Energy Sensor, Relay Module |
+| Layer | Technologies | Status |
+|---|---|---|
+| **Frontend** | HTML5, CSS3, Vanilla JavaScript | Implemented (Prototype UI) |
+| **Charts** | Chart.js | Implemented |
+| **Icons** | Font Awesome | Implemented |
+| **Backend** | Python, Flask, REST API | Implemented |
+| **Database** | MySQL | Implemented (Schema provided) |
+| **AI/ML** | Python (Simulated predictive/rule logic) | Implemented in Backend |
+| **IoT Hardware** | ESP32, PIR, DHT22, LDR, Energy Sensor, Relay Module | Suggested for Demo |
 
 ---
 
@@ -176,38 +176,84 @@ AI Energy Prediction
 ```text
 ai-smart-campus-energy-automation/
 │
-├── index.html
-├── style.css
-├── script.js
+├── index.html          # Main dashboard frontend interface
+├── Style.css           # Custom styling for frontend dashboard
+├── Script.js           # Frontend client-side logic and simulated state
+├── chart.html          # Demo page showcasing standalone Chart.js analytics
+├── package-lock.json
 ├── README.md
-├── LICENSE
-├── .gitignore
 │
-├── assets/
-│   ├── images/
-│   └── screenshots/
-│
-└── docs/
+└── backend/            # Python Flask Backend
+    ├── app.py          # Main Flask API and automation rules engine
+    ├── database.py     # MySQL connection configuration
+    ├── schema.sql      # Database schema and seed data SQL
+    ├── requirements.txt# Python package dependencies list
+    └── venv/           # Python virtual environment (if pre-configured)
 ```
 
 ---
 
-## Run Locally
+## Setting Up and Running the Project
 
-This frontend prototype does not require Node.js, React, or a backend server.
+Follow these steps to set up the MySQL database, start the Flask backend, and run the frontend prototype.
 
-### Option 1: Open directly
+### 1. Database Setup (MySQL)
 
-1. Download or clone this repository.
-2. Open the project folder.
-3. Double-click `index.html`.
+1. Make sure you have **MySQL Server** installed and running on your local machine.
+2. Open your preferred MySQL client (MySQL Command Line Client, MySQL Workbench, phpMyAdmin, etc.).
+3. Create the database and import the tables and mock seed data using [schema.sql](file:///c:/Users/sujal/OneDrive/Documents/GitHub/Hackathon/backend/schema.sql):
+   - You can execute the commands in `schema.sql` directly inside your SQL editor, or run the following command in your terminal/command prompt:
+     ```bash
+     mysql -u your_username -p < backend/schema.sql
+     ```
+4. Verify or update the database credentials in [database.py](file:///c:/Users/sujal/OneDrive/Documents/GitHub/Hackathon/backend/database.py). If your MySQL username or password is different from the default (`root` / `Sun@2525`), update the connection parameters:
+   ```python
+   def get_db_connection():
+       return mysql.connector.connect(
+           host="localhost",
+           user="your_username",
+           password="your_password",
+           database="smart_campus"
+       )
+   ```
 
-### Option 2: Use VS Code Live Server
+### 2. Backend Setup (Flask Server)
 
-1. Open the folder in Visual Studio Code.
-2. Install the **Live Server** extension.
-3. Right-click `index.html`.
-4. Click **Open with Live Server**.
+1. Open your terminal/command prompt and navigate to the `backend/` directory:
+   ```bash
+   cd backend
+   ```
+2. Activate the pre-configured virtual environment `venv/`:
+   - **Windows (PowerShell)**:
+     ```powershell
+     .\venv\Scripts\Activate.ps1
+     ```
+   - **Windows (Command Prompt)**:
+     ```cmd
+     .\venv\Scripts\activate.bat
+     ```
+   - **macOS / Linux**:
+     ```bash
+     source venv/bin/activate
+     ```
+3. Install the required Python dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. Run the Flask development server:
+   ```bash
+   python app.py
+   ```
+   The backend API will start running at `http://127.0.0.1:5000/`. 
+   - You can test that the backend is running by visiting `http://127.0.0.1:5000/`.
+   - You can verify the MySQL connection status by visiting `http://127.0.0.1:5000/api/test-db`.
+
+### 3. Frontend Setup
+
+The frontend is a static web application. It runs completely inside the browser.
+- **Option 1 (Recommended)**: Open the project folder in VS Code, install the **Live Server** extension, right-click [index.html](file:///c:/Users/sujal/OneDrive/Documents/GitHub/Hackathon/index.html), and select **Open with Live Server**.
+- **Option 2**: Simply double-click [index.html](file:///c:/Users/sujal/OneDrive/Documents/GitHub/Hackathon/index.html) to open it directly in your web browser.
+- You can also view the standalone charts page by opening [chart.html](file:///c:/Users/sujal/OneDrive/Documents/GitHub/Hackathon/chart.html).
 
 ---
 
@@ -236,7 +282,7 @@ This frontend prototype does not require Node.js, React, or a backend server.
 
 ---
 
-## Current Prototype Status
+## Project Status & Implementation Progress
 
 - [x] Responsive frontend dashboard
 - [x] Simulated IoT sensor data
@@ -251,9 +297,10 @@ This frontend prototype does not require Node.js, React, or a backend server.
 - [x] Notifications and alerts
 - [x] AI prediction interface simulation
 - [x] Chart.js analytics
-- [ ] Flask backend connection
-- [ ] MySQL database connection
-- [ ] ESP32 live sensor integration
+- [x] Flask backend API implementation
+- [x] MySQL database schema and seed data
+- [ ] ESP32 live sensor integration (In progress)
+- [ ] Connect frontend to live backend endpoints
 - [ ] Real ML model deployment
 - [ ] Real-time WebSocket updates
 
@@ -276,11 +323,12 @@ This frontend prototype does not require Node.js, React, or a backend server.
 
 | Role | Name |
 |---|---|
-| Team Lead | Add Name |
-| Frontend Developer | Add Name |
-| Backend Developer | Add Name |
-| IoT / Hardware Developer | Add Name |
-| AI / ML Developer | Add Name |
+| Team Lead | Pruthika Dobariya |
+| Frontend Developer | Sujal Makvana |
+| Backend Developer | Sunidhi Makwana |
+| IoT / Hardware Developer | Dhrumit Prajapati |
+| AI / ML Developer | Urvish Dobariya |
+| PPT - Presentation | Parth Rajpurohit |
 
 ---
 
@@ -295,3 +343,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 This project is developed as a prototype for the **Smart India Hackathon (SIH)**.
 
 **Theme:** Smart Campus Automation, Energy Management, IoT, AI/ML, and Predictive Maintenance.
+
