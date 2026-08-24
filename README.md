@@ -323,11 +323,12 @@ The frontend is a static web application. It runs completely inside the browser.
 
 | Role | Name |
 |---|---|
-| Team Lead | Add Name |
-| Frontend Developer | Add Name |
-| Backend Developer | Add Name |
-| IoT / Hardware Developer | Add Name |
-| AI / ML Developer | Add Name |
+| Team Lead | Pruthika Dobariya |
+| Frontend Developer | Sujal Makvana |
+| Backend Developer | Sunidhi Makwana |
+| IoT / Hardware Developer | Dhrumit Prajapati |
+| AI / ML Developer | Urvish Dobariya |
+| PPT - Presentation | Parth Rajpurohit |
 
 ---
 
