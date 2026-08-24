@@ -457,7 +457,7 @@ async function loadDevicesFromBackend() {
                 floor: device.floor,
                 room: device.room,
                 department: department,
-                power: device.power ? ? "0 kW",
+                power: device.power ?? "0 kW",
                 health: health,
                 risk: risk,
                 status: frontendStatus,
