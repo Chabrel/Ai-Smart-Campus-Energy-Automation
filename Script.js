@@ -308,8 +308,281 @@ const devices = [{
         icon: "fa-fan"
     }
 ];
+// =========================================================
+// BACKEND / MYSQL API
+// =========================================================
 
+const API_BASE_URL = "http://127.0.0.1:5000/api";
+
+async function apiGet(endpoint) {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`);
+
+    if (!response.ok) {
+        throw new Error(`API Error: ${response.status}`);
+    }
+
+    return await response.json();
+}
+// =========================================================
+// LOAD ENERGY SUMMARY FROM MYSQL
+// =========================================================
+
+async function loadEnergySummaryFromBackend() {
+    try {
+        const data = await apiGet("/energy/summary");
+
+        if (
+            !data ||
+            data.status !== "success" ||
+            !data.summary
+        ) {
+            throw new Error("Invalid energy summary received");
+        }
+
+        const summary = data.summary;
+
+        console.log(
+            "Energy summary loaded from MySQL:",
+            summary
+        );
+
+        state.energy = Number(summary.total_energy) || 0;
+        state.energyAverage = Number(summary.average_energy) || 0;
+        state.energyPeak = Number(summary.peak_energy) || 0;
+
+        refreshUI();
+
+    } catch (error) {
+        console.error(
+            "Could not load energy summary:",
+            error
+        );
+
+        showToast(
+            "Energy Backend Error",
+            "Could not load energy summary from MySQL.",
+            "danger"
+        );
+    }
+}
+
+// =========================================================
+// LOAD DEVICES FROM MYSQL
+// =========================================================
+
+async function loadDevicesFromBackend() {
+
+    try {
+
+        const data = await apiGet("/devices");
+
+        if (!Array.isArray(data)) {
+            throw new Error("Invalid device data received");
+        }
+
+        const realDevices = data.map((device) => {
+
+            const status = String(
+                device.status || "Normal"
+            );
+
+            let department = "General";
+            let icon = "fa-microchip";
+
+            switch (device.device_type) {
+
+                case "Air Conditioner":
+                case "AC Unit":
+                    department = "HVAC";
+                    icon = "fa-snowflake";
+                    break;
+
+                case "Ceiling Fan":
+                case "Fan":
+                    department = "Electrical";
+                    icon = "fa-fan";
+                    break;
+
+                case "Smart Light":
+                case "Light":
+                    department = "Electrical";
+                    icon = "fa-lightbulb";
+                    break;
+
+                case "Computer":
+                    department = "IT";
+                    icon = "fa-desktop";
+                    break;
+
+                case "Projector":
+                    department = "IT / AV";
+                    icon = "fa-video";
+                    break;
+
+                case "Network Device":
+                    department = "Network";
+                    icon = "fa-network-wired";
+                    break;
+
+                case "Water Pump":
+                    department = "Plumbing";
+                    icon = "fa-faucet-drip";
+                    break;
+            }
+
+            let health = 100;
+            let risk = 10;
+            let frontendStatus = "Operational";
+
+            if (status.toLowerCase() === "warning") {
+                health = 70;
+                risk = 50;
+                frontendStatus = "Warning";
+            }
+
+            if (status.toLowerCase() === "fault") {
+                health = 35;
+                risk = 90;
+                frontendStatus = "Fault";
+            }
+
+            return {
+                id: device.device_id,
+                name: device.device_name,
+                type: device.device_type,
+                building: device.building,
+                floor: device.floor,
+                room: device.room,
+                department: department,
+                power: device.power ?? "0 kW",
+                health: health,
+                risk: risk,
+                status: frontendStatus,
+                lastChecked: "Just now",
+                icon: icon
+            };
+        });
+
+        // Replace demo devices with MySQL devices
+        devices.splice(
+            0,
+            devices.length,
+            ...realDevices
+        );
+
+        console.log(
+            "Devices loaded from MySQL:",
+            devices
+        );
+
+        renderDevices();
+
+    } catch (error) {
+
+        console.error(
+            "Could not load devices:",
+            error
+        );
+
+        showToast(
+            "Backend Error",
+            "Could not load devices from MySQL.",
+            "danger"
+        );
+    }
+}
+
+
+// =========================================================
+// TEST BACKEND
+// =========================================================
+
+async function testBackendConnection() {
+
+    try {
+
+        const result =
+            await apiGet("/test-db");
+
+        console.log(
+            "Backend/MySQL:",
+            result
+        );
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "Backend connection failed:",
+            error
+        );
+
+        return false;
+    }
+}
+// =========================================================
+// LOAD ROOMS FROM MYSQL
+// =========================================================
+
+async function loadRoomsFromBackend() {
+    try {
+
+        const data = await apiGet("/rooms");
+
+        if (!Array.isArray(data)) {
+            throw new Error("Invalid rooms data received");
+        }
+
+        const realRooms = data.map((room) => {
+
+            return {
+                room: room.room_name,
+                building: room.building,
+                occupancy: room.occupancy,
+                capacity: room.capacity,
+                temp: room.temperature,
+                humidity: room.humidity,
+                light: room.light_level,
+                power: room.power_usage,
+                ac: room.ac_status,
+                fan: room.fan_status,
+                lights: room.lights_status,
+                status: room.room_status
+            };
+
+        });
+
+        // Replace demo room data with MySQL data
+        rooms.splice(
+            0,
+            rooms.length,
+            ...realRooms
+        );
+
+        console.log(
+            "Rooms loaded from MySQL:",
+            rooms
+        );
+
+        renderRooms();
+
+    } catch (error) {
+
+        console.error(
+            "Could not load rooms:",
+            error
+        );
+
+        showToast(
+            "Room Backend Error",
+            "Could not load classroom data from MySQL.",
+            "danger"
+        );
+    }
+}
 const employees = [{
+  
         id: "EMP-104",
         name: "Rahul Patel",
         department: "IT / AV",
@@ -1912,7 +2185,7 @@ function selectEmployee(department) {
   return fallbackEmployees[0] || null;
 }
 
-function simulateFault(deviceName = "Projector P-A204") {
+async function simulateFault(deviceName = "Projector P-A204") {
   const device = devices.find((item) => item.name === deviceName);
 
   if (!device) {
@@ -1971,6 +2244,104 @@ function simulateFault(deviceName = "Projector P-A204") {
     eta: fault.eta,
     status: "Assigned"
   };
+  // Save the generated ticket in MySQL
+try {
+  const departmentMap = {
+    "IT / AV": 1,
+    "HVAC": 1,
+    "Electrical": 2,
+    "IT": 2,
+    "Network": 2,
+    "Lab Equipment": 2,
+    "Plumbing": 2
+  };
+
+  const departmentId = departmentMap[department] || 2;
+
+  const response = await fetch(
+    `${API_BASE_URL}/tickets`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        device_id: Number(device.id),
+        department_id: departmentId,
+        employee_id: null,
+        issue: fault.issue,
+        priority: fault.priority,
+        status: "Open"
+      })
+    }
+  );
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw new Error(result.message || "Ticket creation failed");
+  }
+
+  console.log("Ticket saved in MySQL:", result);
+
+} catch (error) {
+  console.error("MySQL ticket save failed:", error);
+
+  showToast(
+    "Backend Ticket Error",
+    "Ticket was not saved to MySQL.",
+    "danger"
+  );
+}
+// Save ticket to MySQL backend
+try {
+  const departmentMap = {
+    "IT / AV": 1,
+    "HVAC": 1,
+    "Electrical": 2,
+    "IT": 2,
+    "Network": 2,
+    "Lab Equipment": 2,
+    "Plumbing": 2
+  };
+
+  const departmentId = departmentMap[department] || 2;
+
+  const response = await fetch(
+    `${API_BASE_URL}/tickets`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        device_id: Number(device.id),
+        department_id: departmentId,
+        employee_id: null,
+        issue: fault.issue,
+        priority: fault.priority,
+        status: "Open"
+      })
+    }
+  );
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw new Error(result.message || "Ticket creation failed");
+  }
+
+  console.log("Ticket saved in MySQL:", result);
+
+} catch (error) {
+  console.error("MySQL ticket save failed:", error);
+
+  showToast(
+    "Backend Ticket Error",
+    "Ticket was not saved to MySQL.",
+    "danger"
+  );
+}
 
   tickets.unshift(ticket);
 
@@ -2415,12 +2786,116 @@ function refreshUI() {
     automationSaved.textContent = `${state.saved.toFixed(1)} kWh`;
   }
 }
+// =========================================================
+// LOAD TICKETS FROM MYSQL
+// =========================================================
 
-function initializeApp() {
-  setupEventListeners();
-  refreshUI();
-  createCharts();
-  startLiveSimulation();
+async function loadTicketsFromBackend() {
+    try {
+
+        const data = await apiGet("/tickets");
+        if (!Array.isArray(data)) {
+            throw new Error("Invalid tickets data received");
+        }
+
+        const realTickets = data.map((ticket) => {
+
+            const device = devices.find(
+                (d) => Number(d.id) === Number(ticket.device_id)
+            );
+
+            const employee = employees.find(
+                (e) =>
+                    Number(e.id) === Number(ticket.employee_id) ||
+                    e.employee_id === ticket.employee_id
+            );
+
+            const department = departments.find(
+                (d) =>
+                    Number(d.id) === Number(ticket.department_id) ||
+                    d.department_id === ticket.department_id
+            );
+
+            return {
+                id: `MT-2026-${String(ticket.ticket_id).padStart(5, "0")}`,
+
+                device: device
+                    ? device.name
+                    : `Device ${ticket.device_id}`,
+
+                fault: ticket.issue,
+
+                location: device
+                    ? `${device.building} / Floor ${device.floor} / ${device.room}`
+                    : "Location unavailable",
+
+                priority: ticket.priority,
+
+                department: department
+                    ? department.name
+                    : `Department ${ticket.department_id}`,
+
+                employee: employee
+                    ? employee.name
+                    : `Employee ${ticket.employee_id}`,
+
+                created: ticket.created_at,
+
+                eta: "Pending",
+
+                status: ticket.status
+            };
+        });
+
+        tickets.splice(
+            0,
+            tickets.length,
+            ...realTickets
+        );
+
+        console.log(
+            "Tickets loaded from MySQL:",
+            tickets
+        );
+
+        renderTickets();
+
+    } catch (error) {
+
+        console.error(
+            "Could not load tickets:",
+            error
+        );
+
+        showToast(
+            "Ticket Backend Error",
+            "Could not load tickets from MySQL.",
+            "danger"
+        );
+    }
+}
+
+async function initializeApp() {
+
+    setupEventListeners();
+
+    // First show the existing UI
+    refreshUI();
+
+    createCharts();
+
+    startLiveSimulation();
+
+    // Check Flask + MySQL
+    const connected =
+    await testBackendConnection();
+
+if (connected) {
+    await loadDevicesFromBackend();
+    await loadRoomsFromBackend();
+    await loadTicketsFromBackend();
+  await loadEnergySummaryFromBackend();
+}
 }
 
 if (document.readyState === "loading") {
